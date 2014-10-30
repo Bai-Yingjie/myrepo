@@ -1,6 +1,7 @@
+syntax on
 "colorscheme desert
 colorscheme ron
-set clipboard=unnamedplus
+"set clipboard=unnamedplus
 "mouse in normal mode
 set mouse=n
 set updatetime=1000
