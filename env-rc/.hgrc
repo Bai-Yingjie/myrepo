@@ -1,8 +1,11 @@
 [ui]
 username = Bai Yingjie <byj.tea@gmail.com>
 verbose = True
+merge = vimdiff
 
 [merge-tools]
+vimdiff.executable = vim
+vimdiff.args = -d $base $local $output $other +close +close
 kdiff3.executable=/usr/bin/kdiff3
 kdiff3.args = $base $local $other -o $output
 kdiff3.priority = 1
