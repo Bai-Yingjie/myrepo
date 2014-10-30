@@ -1,5 +1,5 @@
 "colorscheme desert
-colorscheme ron 
+colorscheme ron
 set clipboard=unnamedplus
 "mouse in normal mode
 set mouse=n
