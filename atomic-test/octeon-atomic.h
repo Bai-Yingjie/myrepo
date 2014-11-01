@@ -4,6 +4,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#include <assert.h>
 
 /*begin orig cvmx-atomic.h*/
 
