@@ -481,26 +481,38 @@ static inline unsigned int cvmx_atomic_compare_and_store32(unsigned int * ptr, u
 
 /*end orig cvmx-atomic.h*/
 
-#define __sync_do(func64, type64, func32, type32, ptr, value, args...) \
+#define __sync_do1(func64, type64, func32, type32, ptr, val) \
 ({ \
 	typeof(*ptr) octeon_ret; \
 	if (__builtin_types_compatible_p(typeof(*ptr), type64)) \
-		octeon_ret = func64((type64 *)ptr, (type64)value, ##(type64)args); \
+		octeon_ret = func64((type64 *)ptr, (type64)val); \
 	else if (__builtin_types_compatible_p(typeof(*ptr), type32)) \
-		octeon_ret = func32((type32 *)ptr, (type32)value, ##(type32)args); \
+		octeon_ret = func32((type32 *)ptr, (type32)val); \
 	else \
 		assert(("atomic not 8 or 4 bytes!",0)); \
 	octeon_ret; \
 })
 
-#define __sync_fetch_and_add(ptr, amount) __sync_do(cvmx_atomic_fetch_and_add64, long, cvmx_atomic_fetch_and_add32, int, (ptr), (amount))
-#define __sync_add_and_fetch(ptr, amount) __sync_do(cvmx_atomic_add_and_fetch64, long, cvmx_atomic_add_and_fetch32, int, (ptr), (amount))
+#define __sync_do2(func64, type64, func32, type32, ptr, val1, val2) \
+({ \
+	typeof(*ptr) octeon_ret; \
+	if (__builtin_types_compatible_p(typeof(*ptr), type64)) \
+		octeon_ret = func64((type64 *)ptr, (type64)val1, (type64)val2); \
+	else if (__builtin_types_compatible_p(typeof(*ptr), type32)) \
+		octeon_ret = func32((type32 *)ptr, (type32)val1, (type32)val2); \
+	else \
+		assert(("atomic not 8 or 4 bytes!",0)); \
+	octeon_ret; \
+})
 
-#define __sync_fetch_and_sub(ptr, amount) __sync_do(cvmx_atomic_fetch_and_sub64, long, cvmx_atomic_fetch_and_sub32, int, (ptr), (amount))
-#define __sync_sub_and_fetch(ptr, amount) __sync_do(cvmx_atomic_sub_and_fetch64, long, cvmx_atomic_sub_and_fetch32, int, (ptr), (amount))
+#define __sync_fetch_and_add(ptr, amount) __sync_do1(cvmx_atomic_fetch_and_add64, long, cvmx_atomic_fetch_and_add32, int, (ptr), (amount))
+#define __sync_add_and_fetch(ptr, amount) __sync_do1(cvmx_atomic_add_and_fetch64, long, cvmx_atomic_add_and_fetch32, int, (ptr), (amount))
 
-#define __sync_lock_test_and_set(ptr, new_val) __sync_do(cvmx_atomic_swap64, unsigned long, cvmx_atomic_swap32, unsigned int, (ptr), (new_val))
-#define __sync_bool_compare_and_swap(ptr, old_val, new_val) __sync_do(cvmx_atomic_compare_and_store64, unsigned long, cvmx_atomic_compare_and_store32, unsigned int, (ptr), (old_val), (new_val))
+#define __sync_fetch_and_sub(ptr, amount) __sync_do1(cvmx_atomic_fetch_and_sub64, long, cvmx_atomic_fetch_and_sub32, int, (ptr), (amount))
+#define __sync_sub_and_fetch(ptr, amount) __sync_do1(cvmx_atomic_sub_and_fetch64, long, cvmx_atomic_sub_and_fetch32, int, (ptr), (amount))
+
+#define __sync_lock_test_and_set(ptr, new_val) __sync_do1(cvmx_atomic_swap64, unsigned long, cvmx_atomic_swap32, unsigned int, (ptr), (new_val))
+#define __sync_bool_compare_and_swap(ptr, old_val, new_val) __sync_do2(cvmx_atomic_compare_and_store64, unsigned long, cvmx_atomic_compare_and_store32, unsigned int, (ptr), (old_val), (new_val))
 
 
 #ifdef __cplusplus
