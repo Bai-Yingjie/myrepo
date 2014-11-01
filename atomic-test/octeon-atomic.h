@@ -481,13 +481,17 @@ static inline unsigned int cvmx_atomic_compare_and_store32(unsigned int * ptr, u
 }
 
 /*end orig cvmx-atomic.h*/
+#define __btcp __builtin_types_compatible_p
+
+#define type_is_8byte(ptr) __btcp(typeof(*ptr), long) || __btcp(typeof(*ptr), unsigned long) || __btcp(typeof(*ptr), long long) || __btcp(typeof(*ptr), unsigned long long)
+#define type_is_4byte(ptr) __btcp(typeof(*ptr), int) || __btcp(typeof(*ptr), unsigned int)
 
 #define __sync_do1(func64, type64, func32, type32, ptr, val) \
 ({ \
 	typeof(*ptr) octeon_ret; \
-	if (__builtin_types_compatible_p(typeof(*ptr), type64)) \
+	if (type_is_8byte(ptr)) \
 		octeon_ret = func64((type64 *)ptr, (type64)val); \
-	else if (__builtin_types_compatible_p(typeof(*ptr), type32)) \
+	else if (type_is_4byte(ptr)) \
 		octeon_ret = func32((type32 *)ptr, (type32)val); \
 	else \
 		assert(("atomic not 8 or 4 bytes!",0)); \
@@ -497,9 +501,9 @@ static inline unsigned int cvmx_atomic_compare_and_store32(unsigned int * ptr, u
 #define __sync_do2(func64, type64, func32, type32, ptr, val1, val2) \
 ({ \
 	typeof(*ptr) octeon_ret; \
-	if (__builtin_types_compatible_p(typeof(*ptr), type64)) \
+	if (type_is_8byte(ptr)) \
 		octeon_ret = func64((type64 *)ptr, (type64)val1, (type64)val2); \
-	else if (__builtin_types_compatible_p(typeof(*ptr), type32)) \
+	else if (type_is_4byte(ptr)) \
 		octeon_ret = func32((type32 *)ptr, (type32)val1, (type32)val2); \
 	else \
 		assert(("atomic not 8 or 4 bytes!",0)); \
@@ -515,8 +519,7 @@ static inline unsigned int cvmx_atomic_compare_and_store32(unsigned int * ptr, u
 #define __sync_lock_test_and_set(ptr, new_val) __sync_do1(cvmx_atomic_swap64, unsigned long, cvmx_atomic_swap32, unsigned int, (ptr), (new_val))
 #define __sync_bool_compare_and_swap(ptr, old_val, new_val) __sync_do2(cvmx_atomic_compare_and_store64, unsigned long, cvmx_atomic_compare_and_store32, unsigned int, (ptr), (old_val), (new_val))
 
-
 #ifdef __cplusplus
-      }
+}
 #endif
 #endif

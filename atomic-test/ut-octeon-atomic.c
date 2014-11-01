@@ -4,6 +4,7 @@
 #define ut_atomic1(func, type) \
 do { \
 	type v, ret, v1; \
+	printf("---->sizeof %s is %d\n", #type, sizeof(type)); \
 	printf("before test [%s]:v=%d, v1=%d\n", #func, v, v1); \
 	ret = func(&v, v1); \
 	printf("after test [%s]:v=%d, ret=%d\n", #func, v, ret); \
@@ -12,6 +13,7 @@ do { \
 #define ut_atomic2(func, type) \
 do { \
 	type v, ret, v1, v2; \
+	printf("---->sizeof %s is %d\n", #type, sizeof(type)); \
 	printf("before test [%s]:v=%d, v1=%d, v2=%d\n", #func, v, v1, v2); \
 	ret = func(&v, v1, v2); \
 	printf("after test [%s]:v=%d, ret=%d\n", #func, v, ret); \
@@ -31,16 +33,21 @@ do { \
 int main(int argc, char *argv[])
 {
 	int i;
-	for (i = 0; i < 10; i++) {
+	for (i = 0; i < 1; i++) {
 		printf("==================%d===================\n", i);
 		ut_test_round(long);
 		ut_test_round(unsigned long);
 		ut_test_round(int);
 		ut_test_round(unsigned int);
-		ut_test_round(short);
-		ut_test_round(unsigned short);
-		ut_test_round(char);
-		ut_test_round(unsigned char);
+		ut_test_round(unsigned long int);
+		ut_test_round(long unsigned int);
+		ut_test_round(long unsigned long);
+		ut_test_round(long long);
+
+		//ut_test_round(short);
+		//ut_test_round(unsigned short);
+		//ut_test_round(char);
+		//ut_test_round(unsigned char);
 	}
 	return 0;
 }
