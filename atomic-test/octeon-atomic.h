@@ -29,7 +29,7 @@ extern "C" {
  *
  * @return Value of memory location before increment
  */
-static inline long cvmx_atomic_fetch_and_add64_nosync(long *ptr, long incr)
+static inline __attribute__((always_inline)) long cvmx_atomic_fetch_and_add64_nosync(long *ptr, long incr)
 {
     unsigned long ret;
 
@@ -69,7 +69,7 @@ static inline long cvmx_atomic_fetch_and_add64_nosync(long *ptr, long incr)
  *
  * @return Value of memory location before increment
  */
-static inline long cvmx_atomic_fetch_and_add64(long * ptr, long incr)
+static inline __attribute__((always_inline)) long cvmx_atomic_fetch_and_add64(long * ptr, long incr)
 {
 	unsigned long ret;
 	CVMX_SYNCWS;
@@ -90,7 +90,7 @@ static inline long cvmx_atomic_fetch_and_add64(long * ptr, long incr)
  *
  * @return Value of memory location after increment
  */
-static inline long cvmx_atomic_add_and_fetch64(long * ptr, long incr)
+static inline __attribute__((always_inline)) long cvmx_atomic_add_and_fetch64(long * ptr, long incr)
 {
 	unsigned long ret;
 	CVMX_SYNCWS;
@@ -111,7 +111,7 @@ static inline long cvmx_atomic_add_and_fetch64(long * ptr, long incr)
  *
  * @return Value of memory location after decrement
  */
-static inline long cvmx_atomic_fetch_and_sub64(long * ptr, long incr)
+static inline __attribute__((always_inline)) long cvmx_atomic_fetch_and_sub64(long * ptr, long incr)
 {
 	unsigned long ret;
 	CVMX_SYNCWS;
@@ -132,7 +132,7 @@ static inline long cvmx_atomic_fetch_and_sub64(long * ptr, long incr)
  *
  * @return Value of memory location after decrement
  */
-static inline long cvmx_atomic_sub_and_fetch64(long * ptr, long incr)
+static inline __attribute__((always_inline)) long cvmx_atomic_sub_and_fetch64(long * ptr, long incr)
 {
 	unsigned long ret;
 	CVMX_SYNCWS;
@@ -155,7 +155,7 @@ static inline long cvmx_atomic_sub_and_fetch64(long * ptr, long incr)
  *
  * @return Value of memory location before increment
  */
-static inline int cvmx_atomic_fetch_and_add32_nosync(int *ptr, int incr)
+static inline __attribute__((always_inline)) int cvmx_atomic_fetch_and_add32_nosync(int *ptr, int incr)
 {
     unsigned int ret;
 
@@ -195,7 +195,7 @@ static inline int cvmx_atomic_fetch_and_add32_nosync(int *ptr, int incr)
  *
  * @return Value of memory location before increment
  */
-static inline int cvmx_atomic_fetch_and_add32(int * ptr, int incr)
+static inline __attribute__((always_inline)) int cvmx_atomic_fetch_and_add32(int * ptr, int incr)
 {
 	unsigned int ret;
 	CVMX_SYNCWS;
@@ -216,7 +216,7 @@ static inline int cvmx_atomic_fetch_and_add32(int * ptr, int incr)
  *
  * @return Value of memory location after increment
  */
-static inline int cvmx_atomic_add_and_fetch32(int * ptr, int incr)
+static inline __attribute__((always_inline)) int cvmx_atomic_add_and_fetch32(int * ptr, int incr)
 {
 	unsigned int ret;
 	CVMX_SYNCWS;
@@ -237,7 +237,7 @@ static inline int cvmx_atomic_add_and_fetch32(int * ptr, int incr)
  *
  * @return Value of memory location after decrement
  */
-static inline int cvmx_atomic_fetch_and_sub32(int * ptr, int incr)
+static inline __attribute__((always_inline)) int cvmx_atomic_fetch_and_sub32(int * ptr, int incr)
 {
 	unsigned int ret;
 	CVMX_SYNCWS;
@@ -258,7 +258,7 @@ static inline int cvmx_atomic_fetch_and_sub32(int * ptr, int incr)
  *
  * @return Value of memory location after decrement
  */
-static inline int cvmx_atomic_sub_and_fetch32(int * ptr, int incr)
+static inline __attribute__((always_inline)) int cvmx_atomic_sub_and_fetch32(int * ptr, int incr)
 {
 	unsigned int ret;
 	CVMX_SYNCWS;
@@ -280,7 +280,7 @@ static inline int cvmx_atomic_sub_and_fetch32(int * ptr, int incr)
  *
  * @return Value of memory location before swap operation
  */
-static inline unsigned long cvmx_atomic_swap64_nosync(unsigned long *ptr, unsigned long new_val)
+static inline __attribute__((always_inline)) unsigned long cvmx_atomic_swap64_nosync(unsigned long *ptr, unsigned long new_val)
 {
     unsigned long ret;
 
@@ -308,7 +308,7 @@ static inline unsigned long cvmx_atomic_swap64_nosync(unsigned long *ptr, unsign
     return (ret);
 }
 
-static inline unsigned long cvmx_atomic_swap64(unsigned long * ptr, unsigned long new_val)
+static inline __attribute__((always_inline)) unsigned long cvmx_atomic_swap64(unsigned long * ptr, unsigned long new_val)
 {
 	unsigned long ret;
 	CVMX_SYNCWS;
@@ -330,7 +330,7 @@ static inline unsigned long cvmx_atomic_swap64(unsigned long * ptr, unsigned lon
  *
  * @return Value of memory location before swap operation
  */
-static inline unsigned int cvmx_atomic_swap32_nosync(unsigned int *ptr, unsigned int new_val)
+static inline __attribute__((always_inline)) unsigned int cvmx_atomic_swap32_nosync(unsigned int *ptr, unsigned int new_val)
 {
     unsigned int ret;
 
@@ -358,7 +358,7 @@ static inline unsigned int cvmx_atomic_swap32_nosync(unsigned int *ptr, unsigned
     return (ret);
 }
 
-static inline unsigned int cvmx_atomic_swap32(unsigned int * ptr, unsigned int new_val)
+static inline __attribute__((always_inline)) unsigned int cvmx_atomic_swap32(unsigned int * ptr, unsigned int new_val)
 {
 	unsigned int ret;
 	CVMX_SYNCWS;
@@ -379,7 +379,7 @@ static inline unsigned int cvmx_atomic_swap32(unsigned int * ptr, unsigned int n
  * @return 1 on success (match and store)
  *         0 on no match
  */
-static inline unsigned long cvmx_atomic_compare_and_store64_nosync(unsigned long *ptr, unsigned long old_val, unsigned long new_val)
+static inline __attribute__((always_inline)) unsigned long cvmx_atomic_compare_and_store64_nosync(unsigned long *ptr, unsigned long old_val, unsigned long new_val)
 {
     unsigned long tmp, ret;
 
@@ -414,7 +414,7 @@ static inline unsigned long cvmx_atomic_compare_and_store64_nosync(unsigned long
  * @return 1 on success (match and store)
  *         0 on no match
  */
-static inline unsigned long cvmx_atomic_compare_and_store64(unsigned long * ptr, unsigned long old_val, unsigned long new_val)
+static inline __attribute__((always_inline)) unsigned long cvmx_atomic_compare_and_store64(unsigned long * ptr, unsigned long old_val, unsigned long new_val)
 {
 	unsigned long ret;
 	CVMX_SYNCWS;
@@ -435,7 +435,7 @@ static inline unsigned long cvmx_atomic_compare_and_store64(unsigned long * ptr,
  * @return 1 on success (match and store)
  *         0 on no match
  */
-static inline unsigned int cvmx_atomic_compare_and_store32_nosync(unsigned int *ptr, unsigned int old_val, unsigned int new_val)
+static inline __attribute__((always_inline)) unsigned int cvmx_atomic_compare_and_store32_nosync(unsigned int *ptr, unsigned int old_val, unsigned int new_val)
 {
     unsigned int tmp, ret;
 
@@ -470,7 +470,7 @@ static inline unsigned int cvmx_atomic_compare_and_store32_nosync(unsigned int *
  * @return 1 on success (match and store)
  *         0 on no match
  */
-static inline unsigned int cvmx_atomic_compare_and_store32(unsigned int * ptr, unsigned int old_val, unsigned int new_val)
+static inline __attribute__((always_inline)) unsigned int cvmx_atomic_compare_and_store32(unsigned int * ptr, unsigned int old_val, unsigned int new_val)
 {
 	unsigned int ret;
 	CVMX_SYNCWS;
