@@ -1,4 +1,6 @@
 PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[01;34m\] \w\n\$\[\033[00m\] '
+#LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+#export LD_LIBRARY_PATH
 
 case $TERM in
 	xterm*)
@@ -36,6 +38,8 @@ alias kj3='kill -9 %3'
 alias kj4='kill -9 %4'
 alias kj5='kill -9 %5'
 alias kj6='kill -9 %6'
+alias ls='ls --color=auto'
+alias ll='ls -l'
 alias la='ls -a'
 alias lla='ls -al'
 alias llh='ls -lh'
@@ -46,7 +50,7 @@ alias usetall='unset MAKECMDGOALS C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH
 alias diff='diff -Naur'
 alias makc='make BUILDROOT_CUSTOM=1'
 alias mklinuxcs='make cscope ARCH=mips COMPILED_SOURCE=compiled'
-alias minicom='sudo minicom --color=on -s -C ~/tmp/log/`date +%y%m%d%H%M`.log'
+alias minicom='sudo minicom -C ~/tmp/log/`date +%y%m%d%H%M`.log -s -o -c on'
 alias sshcv='ssh yingjie@cvmx.f3322.org'
 
 mkcselffiles() {
@@ -127,4 +131,4 @@ proxyoff() {
 } 
 
 #add for octeon toolchain
-export PATH=/home/byj/repo/tools/mips64-octeon-toolchain/bin:$PATH
+#export PATH=/home/byj/repo/tools/mips64-octeon-toolchain/bin:$PATH
