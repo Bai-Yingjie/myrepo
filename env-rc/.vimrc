@@ -1,7 +1,6 @@
-syntax on
 "colorscheme desert
 colorscheme ron
-"set clipboard=unnamedplus
+set clipboard=unnamedplus
 "mouse in normal mode
 set mouse=n
 set updatetime=1000
@@ -23,7 +22,7 @@ set foldmethod=syntax
 set foldlevelstart=99
 "Taglist settings
 let Tlist_Show_One_File=1
-let Tlist_Auto_Open=1
+let Tlist_Auto_Open=0
 let Tlist_Exit_OnlyWindow=1
 let Tlist_Process_File_Always=1
 let Tlist_WinWidth = 50
