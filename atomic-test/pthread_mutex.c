@@ -7,9 +7,8 @@
 #include <linux/unistd.h>
 #include <sys/syscall.h>
 #include <errno.h>
-//#include "octeon-atomic.h.fail"
 
-#define INC_TO 1000000 // one million...
+#define INC_TO 1000
 
 #define INIT_VAL 10000
 
