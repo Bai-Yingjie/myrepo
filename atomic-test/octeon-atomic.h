@@ -481,10 +481,8 @@ static inline __attribute__((always_inline)) unsigned int cvmx_atomic_compare_an
 }
 
 /*end orig cvmx-atomic.h*/
-#define __btcp __builtin_types_compatible_p
-
-#define type_is_8byte(ptr) __btcp(typeof(*ptr), long) || __btcp(typeof(*ptr), unsigned long) || __btcp(typeof(*ptr), long long) || __btcp(typeof(*ptr), unsigned long long)
-#define type_is_4byte(ptr) __btcp(typeof(*ptr), int) || __btcp(typeof(*ptr), unsigned int)
+#define type_is_8byte(ptr) sizeof(*ptr) == 8
+#define type_is_4byte(ptr) sizeof(*ptr) == 4
 
 #define __sync_do1(func64, type64, func32, type32, ptr, val) \
 ({ \
