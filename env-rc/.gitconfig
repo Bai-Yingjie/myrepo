@@ -2,11 +2,16 @@
 	name = Bai Yingjie
 	email = byj.tea@gmail.com
 [sendemail]
-        smtpencryption = tls
-        smtpserver = smtp.gmail.com
-        smtpuser = byj.tea@gmail.com
-        smtpserverport = 587
+	smtpencryption = tls
+	smtpserver = smtp.gmail.com
+	smtpuser = byj.tea@gmail.com
+	smtpserverport = 587
 [core]
 	editor = vim
+[diff]
+	tool = kdiff3
 [merge]
 	tool = kdiff3
+[alias]
+	ls = log --oneline --decorate
+	lg = log --decorate --stat
