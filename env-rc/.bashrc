@@ -52,9 +52,15 @@ alias makc='make BUILDROOT_CUSTOM=1'
 alias mklinuxcs='make cscope ARCH=mips COMPILED_SOURCE=compiled'
 alias minicom='sudo minicom --color=on -s -C ~/tmp/log/`date +%y%m%d%H%M`.log'
 alias sshcv='ssh yingjie@cvmx.f3322.org'
+alias sshipcv='ssh yingjie@116.226.220.81'
+alias tmat1='tmux att -t1'
+alias tmat2='tmux att -t2'
+alias tmat3='tmux att -t3'
+alias tmat4='tmux att -t4'
+alias tmat5='tmux att -t5'
 
 mkcselffiles() {
-	mips64-octeon-linux-gnu-gdb -ex="info sources" -ex="quit" $1 | sed -e '1,15d' -e 's/,/\n/g' | sed -e '/^ *$/d' -e 's/^ *//g' > cscope.files.tmp1
+	${CROSS_COMPILE}gdb -ex="info sources" -ex="quit" $1 | sed -e '1,15d' -e 's/,/\n/g' | sed -e '/^ *$/d' -e 's/^ *//g' > cscope.files.tmp1
 	find -L `cat cscope.files.tmp1 | egrep "/flat/" | sed 's!\(.*/flat/[^/]*\).*!\1!g' | sort -u` -iname "*.h" -o -iname "*.hh" -o -iname "*.hpp" > cscope.files.tmp2
 	cat cscope.files.tmp1 cscope.files.tmp2 | sort -u > cscope.files
 	rm -f cscope.files.tmp*
@@ -62,7 +68,7 @@ mkcselffiles() {
 
 mkcsfiles() {
 	#find -L $* -iname '*.[ch]' -o -iname '*.[ch]pp' -o -iname '*.cc' -o -iname '*.hh' -o -iname '*.s' | sort -u > cscope.files
-	find $* -type f | sed -n '/\.\([chs]\)\1\{0,1\}\(pp\)\?$/Ip' | sort -u > cscope.files
+	find -L $* -type f | sed -n '/\.\([chs]\)\1\{0,1\}\(pp\)\?$/Ip' | sort -u > cscope.files
 }
 
 mkcs(){
