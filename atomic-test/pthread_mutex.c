@@ -7,7 +7,9 @@
 #include <sys/syscall.h>
 #include <errno.h>
 
-#define INC_TO 1000
+#define USE_ATOMIC
+
+#define INC_TO 1000000000
 
 #define INIT_VAL 10000
 
@@ -21,14 +23,21 @@ typedef struct {
 
 mutex_t g_m;
 
+pthread_mutex_t g_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_spinlock_t spinlock;
+
 void mutex_enter(mutex_t *m)
 {
-	while(os_atomic_test_and_set_ulint(&m->lock, 1));
+	//while(os_atomic_test_and_set_ulint(&m->lock, 1));
+	pthread_mutex_lock(&g_mutex);	
+	//pthread_spin_lock(&spinlock);
 }
 
 void mutex_exit(mutex_t *m)
 {
-	os_atomic_test_and_set_ulint(&m->lock, 0);
+	//os_atomic_test_and_set_ulint(&m->lock, 0);
+	pthread_mutex_unlock(&g_mutex);	
+	//pthread_spin_unlock(&spinlock);
 }
 
 pid_t gettid( void )
@@ -53,21 +62,30 @@ void *thread_routine( void *arg )
 
 	for (i = 0; i < INC_TO; i++)
 	{
+#ifdef USE_ATOMIC
+		__atomic_add_fetch(&global_int, 5, __ATOMIC_SEQ_CST);
+		asm ("":::"memory");
+		__atomic_sub_fetch(&global_int, 5, __ATOMIC_SEQ_CST);
+#else
 		mutex_enter(&g_m);
 		global_int += 5;
-		global_int = global_int;
+		asm ("":::"memory");
 		global_int -= 5;
 		mutex_exit(&g_m);
+#endif
 	}
 
 	return NULL;
 }
+
 
 int main()
 {
 	int procs = 0;
 	int i;
 	pthread_t *thrs;
+
+	pthread_spin_init(&spinlock, 0);
 
 	// Getting number of CPUs
 	procs = (int)sysconf( _SC_NPROCESSORS_ONLN );
