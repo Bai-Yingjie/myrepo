@@ -1,0 +1,33 @@
+[ui]
+username = Bai Yingjie <byj.tea@gmail.com>
+verbose = True
+merge = vimdiff
+
+[merge-tools]
+vimdiff.executable = vim
+vimdiff.args = -d $base $local $output $other +close +close
+kdiff3.executable=/usr/bin/kdiff3
+kdiff3.args = $base $local $other -o $output
+kdiff3.priority = 1
+
+[extensions]
+color =
+hgext.extdiff =
+hgext.purge =
+hgext.graphlog =
+churn =
+mq =
+hgext.bookmarks =
+
+[extdiff]
+cmd.kompare =
+cmd.kdiff3 =
+cmd.vimdiff = vim
+opts.vimdiff = -f '+next' '+execute "DirDiff" argv(0) argv(1)'
+
+[alias]
+qnew = qnew -UD
+ls = log --branch . --limit 36 --template '{rev} {node|short} {branch} {date|shortdate} {author|person} \t{desc|strip|firstline}\n'
+lsa = log --limit 36 --template '{rev} {node|short} {branch} {date|shortdate} {author|person} \t{desc|strip|firstline}\n'
+diffstat = !hg log --stat -r $1::tip
+diffstat1 = !hg log --stat -r $1
