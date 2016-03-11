@@ -59,6 +59,7 @@ alias tmat2='tmux att -t2'
 alias tmat3='tmux att -t3'
 alias tmat4='tmux att -t4'
 alias tmat5='tmux att -t5'
+alias bc='bc -l'
 
 mkcselffiles() {
 	${CROSS_COMPILE}gdb -ex="info sources" -ex="quit" $1 | sed -e '1,15d' -e 's/,/\n/g' | sed -e '/^ *$/d' -e 's/^ *//g' > cscope.files.tmp1

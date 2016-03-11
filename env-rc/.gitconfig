@@ -9,9 +9,9 @@
 [core]
 	editor = vim
 [diff]
-	tool = kdiff3
+	tool = vimdiff
 [merge]
-	tool = kdiff3
+	tool = meld
 [alias]
 	ls = log --oneline --decorate
 	lg = log --decorate --stat
