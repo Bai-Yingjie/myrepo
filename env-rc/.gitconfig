@@ -14,4 +14,6 @@
 	tool = meld
 [alias]
 	ls = log --oneline --decorate
-	lg = log --decorate --stat
+	lg = log --decorate --stat --graph
+[push]
+	default = matching
