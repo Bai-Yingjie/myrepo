@@ -6,7 +6,6 @@ Thank you for your time taking this test, the ground rules behind the test :
 * It is fine to use an editor, paper, etc.  If you take the test on paper, take pictures of the papers and send them back to me.  If you use an editor, zip up the file and send it back to ensure it doesn’t get stripped out by any email virus checking software
 * You must only submit files that you have completely written yourself.
 * No one will be available for questions or clarifications.  If you do have a question, state your assumptions on why you chose the implementation you provided in your answer. 
-* The programming test is ARM's copyright and confidential to ARM - please do not publish or distribute it.
 
 #Questions and answers
 
