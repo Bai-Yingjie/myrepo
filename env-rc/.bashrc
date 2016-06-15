@@ -51,7 +51,8 @@ alias diff='diff -Naur'
 alias makc='make BUILDROOT_CUSTOM=1'
 alias mklinuxcs='make cscope ARCH=mips COMPILED_SOURCE=compiled'
 alias minicom='sudo minicom --color=on -s -C ~/tmp/log/`date +%y%m%d%H%M`.log'
-alias sshcv='ssh yingjie@cvmx.f3322.org'
+alias sshcv='ssh baiyingjie@caviumsh.f3322.net'
+alias sshyun='ssh baiyingjie@caviumtech.cn'
 alias tmat0='tmux att -t0'
 alias tmat1='tmux att -t1'
 alias tmat2='tmux att -t2'
@@ -60,6 +61,7 @@ alias tmat4='tmux att -t4'
 alias tmat5='tmux att -t5'
 alias bc='bc -l'
 alias vi=vim
+alias em='emacs -nw'
 
 mkcselffiles() {
 	${CROSS_COMPILE}gdb -ex="info sources" -ex="quit" $1 | sed -e '1,15d' -e 's/,/\n/g' | sed -e '/^ *$/d' -e 's/^ *//g' > cscope.files.tmp1
