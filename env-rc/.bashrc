@@ -122,22 +122,20 @@ mkgt(){
 }
 
 proxyon() {
-	export http_proxy="135.247.130.16:8080/"
-	export https_proxy=$http_proxy
-	export ftp_proxy=$http_proxy
-	export rsync_proxy=$http_proxy
-	export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com, hg.be.alcatel-lucent.com"
+	export socks_proxy="socks://localhost:11985/"
+	export http_proxy=$socks_proxy
+	export https_proxy=$socks_proxy
+	export ftp_proxy=$socks_proxy
+	export rsync_proxy=$socks_proxy
+	export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
 	echo -e "\nProxy environment variable set."
 }
 
 proxyoff() {
-	unset HTTP_PROXY
+	unset socks_proxy
 	unset http_proxy
-	unset HTTPS_PROXY
 	unset https_proxy
-	unset FTP_PROXY
 	unset ftp_proxy
-	unset RSYNC_PROXY
 	unset rsync_proxy
 	echo -e "\nProxy environment variable removed."
 } 
