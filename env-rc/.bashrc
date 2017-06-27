@@ -51,9 +51,9 @@ alias diff='diff -Naur'
 #alias makc='make BUILDROOT_CUSTOM=1'
 #alias mklinuxcs='make cscope ARCH=mips COMPILED_SOURCE=compiled'
 alias minicom='sudo minicom --color=on -s -C ~/tmp/log/`date +%y%m%d%H%M`.log'
-alias sshcv='ssh baiyingjie@caviumsh.f3322.net'
-alias sshcvx='ssh -X -C -c blowfish-cbc,arcfour baiyingjie@caviumsh.f3322.net'
-alias sshyun='ssh baiyingjie@caviumtech.cn'
+alias sshcv='ssh baiyingjie@cvsh.f3322.net'
+alias sshcvx='ssh -X -C -c blowfish-cbc,arcfour baiyingjie@cvsh.f3322.net'
+alias sshyun='ssh baiyingjie@cvtech.cn'
 alias tmat0='tmux att -t0'
 alias tmat1='tmux att -t1'
 alias tmat2='tmux att -t2'
@@ -140,5 +140,3 @@ proxyoff() {
 	echo -e "\nProxy environment variable removed."
 } 
 
-#add for octeon toolchain
-#export PATH=/home/byj/repo/tools/mips64-octeon-toolchain/bin:$PATH
