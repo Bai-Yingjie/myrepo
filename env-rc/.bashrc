@@ -63,8 +63,7 @@ alias tmat5='tmux att -t5'
 alias bc='bc -l'
 alias vi=vim
 alias em='emacs -nw'
-alias sara='sar -qr -dp -n DEV --human -u ALL 1 1'
-alias saraa='sar -qr -dp -n DEV --human -u ALL 1 1 -P ALL'
+alias sara='sar -Bwqr -dp -n DEV -u ALL 1'
 
 mkcselffiles() {
 	${CROSS_COMPILE}gdb -ex="info sources" -ex="quit" $1 | sed -e '1,15d' -e 's/,/\n/g' | sed -e '/^ *$/d' -e 's/^ *//g' > cscope.files.tmp1
