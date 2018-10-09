@@ -1,29 +1,45 @@
 <domain type='kvm'>
-  <name>hxt-centos7.5-00</name>
-  <uuid>77beac71-9314-4457-b8fa-c3a7991876e8</uuid>
-  <memory unit='KiB'>16777216</memory>
-  <currentMemory unit='KiB'>16777216</currentMemory>
-  <vcpu placement='static'>8</vcpu>
+  <name>hxt-centos7.5-base</name>
+  <uuid>ae1bd933-3e30-4532-ada4-0e7b75d55a1f</uuid>
+  <memory unit='KiB'>8388608</memory>
+  <currentMemory unit='KiB'>8388608</currentMemory>
+  <memoryBacking>
+    <hugepages>
+      <page size='524288' unit='KiB' nodeset='0'/>
+    </hugepages>
+  </memoryBacking>
+  <vcpu placement='static'>4</vcpu>
+  <cputune>
+    <vcpupin vcpu='0' cpuset='4'/>
+    <vcpupin vcpu='1' cpuset='5'/>
+    <vcpupin vcpu='2' cpuset='6'/>
+    <vcpupin vcpu='3' cpuset='7'/>
+  </cputune>
   <os>
-    <type arch='aarch64' machine='virt-rhel7.5.0'>hvm</type>
+    <type arch='aarch64' machine='virt-2.12'>hvm</type>
     <loader readonly='yes' type='pflash'>/usr/local/var/run/libvirt/qemu/aarch64/QEMU_EFI-pflash.raw</loader>
-    <nvram>/usr/local/var/lib/libvirt/qemu/nvram/hxt-centos7.5-00_VARS.fd</nvram>
+    <nvram>/usr/local/var/lib/libvirt/qemu/nvram/hxt-centos7.5-base_VARS.fd</nvram>
     <boot dev='hd'/>
   </os>
   <features>
     <acpi/>
     <gic version='3'/>
   </features>
-  <cpu mode='host-passthrough' check='none'/>
+  <cpu mode='host-passthrough' check='none'>
+    <topology sockets='1' cores='4' threads='1'/>
+    <numa>
+      <cell id='0' cpus='0-3' memory='8388608' unit='KiB' memAccess='shared'/>
+    </numa>
+  </cpu>
   <clock offset='utc'/>
   <on_poweroff>destroy</on_poweroff>
   <on_reboot>restart</on_reboot>
   <on_crash>destroy</on_crash>
   <devices>
-    <emulator>/usr/libexec/qemu-kvm</emulator>
+    <emulator>/usr/local/bin/qemu-system-aarch64</emulator>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='/var/ext_disk1/bai/vm/hxt-centos7.5-00.qcow2'/>
+      <source file='/var/ext_disk1/bai/vm/hxt-centos7.5-base.qcow2'/>
       <target dev='sda' bus='scsi'/>
       <address type='drive' controller='0' bus='0' target='0' unit='0'/>
     </disk>
@@ -60,8 +76,13 @@
       <target chassis='4' port='0xb'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x3'/>
     </controller>
+    <controller type='pci' index='5' model='pcie-root-port'>
+      <model name='pcie-root-port'/>
+      <target chassis='5' port='0xc'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x4'/>
+    </controller>
     <interface type='network'>
-      <mac address='52:54:00:79:cf:64'/>
+      <mac address='52:54:00:bd:c3:ec'/>
       <source network='network1'/>
       <model type='virtio'/>
       <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
