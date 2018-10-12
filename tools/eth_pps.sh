@@ -20,8 +20,8 @@ for t in t1 t2 t3; do
 		test $t = t1 && v1[$i]=$(eval $cmd)
 		test $t = t2 && v2[$i]=$(eval $cmd)
 		if test $t = t3; then
-			echo "==== pps for $name ===="
-			echo -e "${v1[$i]} \n${v2[$i]}" | awk '{a[$1]=$2-a[$1]} END {for(k in a) printf "%s %d pps\n",k,a[k]*1000000/a["date:"]}' | grep -v ": 0" | sort | tail -n+2
+			echo "$name:"
+			echo -e "${v1[$i]} \n${v2[$i]}" | awk '{a[$1]=$2-a[$1]} END {for(k in a) printf "\t%-30s\t%20d pps\n",k,a[k]*1000000/a["date:"]}'| sort | tail -n+2
 			echo 
 		fi
 		((i++))
