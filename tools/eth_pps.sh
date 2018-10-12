@@ -13,6 +13,10 @@ fi
 
 cmd='ethtool -S $name | grep packets | grep -v ": 0" && echo date: $(date +%s%6N)'
 
+echo "Calculating pps for 'ethtool -S' ..."
+echo "Note: 0 pps will be ignored, that said statistics not showed below are 0 pps"
+echo
+
 for t in t1 t2 t3; do
 	i=0
 	test $t = t2 && sleep 1
@@ -21,10 +25,12 @@ for t in t1 t2 t3; do
 		test $t = t2 && v2[$i]=$(eval $cmd)
 		if test $t = t3; then
 			echo "$name:"
-			echo -e "${v1[$i]} \n${v2[$i]}" | awk '{a[$1]=$2-a[$1]} END {for(k in a) printf "\t%-30s\t%20d pps\n",k,a[k]*1000000/a["date:"]}'| sort | tail -n+2
+			echo -e "${v1[$i]} \n${v2[$i]}" | awk '{a[$1]=$2-a[$1]} END {for(k in a) printf "\t%-36s\t%12d pps\n",k,a[k]*1000000/a["date:"]}'| sort | grep -Ev "date|[[:blank:]]0"
 			echo 
 		fi
 		((i++))
 	done
 done 
+
+echo -e "\n\n"
 

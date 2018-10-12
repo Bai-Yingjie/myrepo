@@ -14,6 +14,9 @@ prep () { #string
 }
 
 cmd='ovs-appctl dpctl/show --statistics'
+echo "Calculating pps for 'ovs-appctl dpctl/show --statistics' ..."
+echo "Note: 0 pps will be ignored, that said statistics not showed below are 0 pps"
+echo
 
 for t in t1 t2 t3; do
 	test $t = t1 && v1=$(eval $cmd) && d1=$(date +%s%6N)
@@ -25,6 +28,9 @@ for t in t1 t2 t3; do
 		v1=$(prep "$v1")
 		v2=$(prep "$v2")
 		o=$(echo -e "$v1 \n$v2" | awk -F':' -v td="$td" '{a[$1]=$2-a[$1]} END {for(k in a) printf "%s %d pps\n",k,a[k]*1000000/td}')
-		echo "$o" | grep -v " 0" | sort | awk '{printf "%s:\n\t%s %s\t%s\t%s\n",$1,$2,$3,$4,$5}'
+		echo "$o" | grep -v " 0" | sort | awk '{printf "%s:\n\t%s %s:\t%12s %s\n",$1,$2,$3,$4,$5}'
 	fi
 done 
+
+echo -e "\n\n"
+
