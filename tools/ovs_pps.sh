@@ -2,38 +2,29 @@
 
 PATH=/usr/local/bin:$PATH
 
-ovs-vsctl list interface > /dev/null
+ovs-appctl dpctl/show > /dev/null
 if [ $? -ne 0 ]; then
-	printf "ovs-vsctl execution failed, you may need sudo?\n"
+	printf "execution failed, you may need sudo?\n"
 	exit 1
 fi
 
-cmd='(ovs-vsctl list interface && echo date: $(date +%s%6N)) | grep -E "^name|^statistics|^date" | sed -r -e "s/,|\{|\}//g" -e "s/name *: (.*)/\1:/g" -e "s/statistics *://g"'
+prep () { #string
+	echo "$1" | grep -Eo "port [0-9]*: [[:alnum:]]*|RX packets.*|TX packets.*" | tr "?" "0" \
+		| awk -F'[ :]' '{if(NR%3==1) port=$4; else{for(i=2;i<=NF;i+=2){a[port,$1,$i]=$(i+1)}}} END {for(k in a) {split(k,se,SUBSEP);printf "%s %s %s:%s\n",se[1],se[2],se[3],a[k]}}'
+}
+
+cmd='ovs-appctl dpctl/show --statistics'
 
 for t in t1 t2 t3; do
-	test $t = t1 && v1=$(eval $cmd)
-	test $t = t2 && sleep 10 && v2=$(eval $cmd)
+	test $t = t1 && v1=$(eval $cmd) && d1=$(date +%s%6N)
+	test $t = t2 && sleep 1 && v2=$(eval $cmd) && d2=$(date +%s%6N)
 	if test $t = t3; then
-		i=0
-		declare -A map1 map2
+		((td=$d2 - $d1))
+		#echo $td
 
-		v1=$(echo "$v1" | awk -F: '{printf $0; if(NF==1 || $1=="date") print ""}')
-		while read k v; do
-			map1[$k]=$v
-		done <<< "$v1"
-
-		v2=$(echo "$v2" | awk -F: '{printf $0; if(NF==1 || $1=="date") print ""}')
-		while read k v; do
-			map2[$k]=$v
-		done <<< "$v2"
-
-		((TimeDiff=${map2[date:]} - ${map1[date:]}))
-
-		for k in "${!map2[@]}"; do
-			if test $k != "date:";then
-				echo ==== pps for $k ====
-				echo -e "${map1[$k]} \n${map2[$k]}" | tr ' ' '\n' | grep -v "bytes" | awk -F'=' -v td="$TimeDiff" '{a[$1]=$2-a[$1]} END {for(k in a) printf "%s %d pps\n",k,a[k]*1000000/td}' | grep -v " 0 " | sort
-			fi
-		done
+		v1=$(prep "$v1")
+		v2=$(prep "$v2")
+		o=$(echo -e "$v1 \n$v2" | awk -F':' -v td="$td" '{a[$1]=$2-a[$1]} END {for(k in a) printf "%s %d pps\n",k,a[k]*1000000/td}')
+		echo "$o" | grep -v " 0" | sort | awk '{printf "%s:\n\t%s %s\t%s\t%s\n",$1,$2,$3,$4,$5}'
 	fi
 done 
