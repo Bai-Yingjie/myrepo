@@ -11,7 +11,7 @@ if [ -z "$NETIF" ]; then
 	exit 1
 fi
 
-cmd='ethtool -S $name | grep packets | grep -v ": 0" && echo date: $(date +%s%6N)'
+cmd='ethtool -S $name | grep -E "packets|dis|pause" | grep -v ": 0" && echo date: $(date +%s%6N)'
 
 echo "Calculating pps for 'ethtool -S' ..."
 echo "Note: 0 pps will be ignored, that said statistics not showed below are 0 pps"
