@@ -14,7 +14,7 @@ prep () { #string
 }
 
 cmd='ovs-appctl dpctl/show --statistics'
-echo "Calculating pps for 'ovs-appctl dpctl/show --statistics' ..."
+echo "Calculating pps for $cmd ..."
 echo "Note: 0 pps will be ignored, that said statistics not showed below are 0 pps"
 echo
 

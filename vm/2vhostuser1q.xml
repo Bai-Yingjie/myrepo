@@ -17,8 +17,8 @@
   </cputune>
   <os>
     <type arch='aarch64' machine='virt-2.12'>hvm</type>
-    <loader readonly='yes' type='pflash'>/usr/local/var/run/libvirt/qemu/aarch64/QEMU_EFI-pflash.raw</loader>
-    <nvram>/usr/local/var/lib/libvirt/qemu/nvram/test_VARS.fd</nvram>
+    <loader readonly='yes' type='pflash'>/home/bai/vm/efi-aarch64/QEMU_EFI-pflash.raw</loader>
+    <nvram>/home/bai/vm/efi-aarch64/test_VARS.fd</nvram>
     <boot dev='hd'/>
   </os>
   <features>
@@ -39,7 +39,7 @@
     <emulator>/usr/local/bin/qemu-system-aarch64</emulator>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='/var/ext_disk1/bai/vm/test.qcow2'/>
+      <source file='/home/bai/vm/test.qcow2'/>
       <target dev='sda' bus='scsi'/>
       <address type='drive' controller='0' bus='0' target='0' unit='0'/>
     </disk>
@@ -83,18 +83,18 @@
     </controller>
     <interface type='network'>
       <mac address='52:54:00:51:89:92'/>
-      <source network='network1'/>
+      <source network='default'/>
       <model type='virtio'/>
       <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
     </interface>
     <interface type='vhostuser'>
-      <mac address='52:54:00:38:fe:8c'/>
+      <mac address='52:54:00:38:fe:00'/>
       <source type='unix' path='/usr/local/var/run/openvswitch/dpdkvhostuser0' mode='client'/>
       <model type='virtio'/>
       <address type='pci' domain='0x0000' bus='0x04' slot='0x00' function='0x0'/>
     </interface>
     <interface type='vhostuser'>
-      <mac address='52:54:00:1a:d9:3c'/>
+      <mac address='52:54:00:38:fe:01'/>
       <source type='unix' path='/usr/local/var/run/openvswitch/dpdkvhostuser1' mode='client'/>
       <model type='virtio'/>
       <address type='pci' domain='0x0000' bus='0x05' slot='0x00' function='0x0'/>
