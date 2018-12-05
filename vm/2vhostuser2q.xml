@@ -91,8 +91,8 @@
       <mac address='52:54:00:38:fe:00'/>
       <source type='unix' path='/tmp/dpdkvhostuser0' mode='server'/>
       <model type='virtio'/>
-      <driver rx_queue_size='1024' tx_queue_size='1024'>
-        <host mrg_rxbuf='off'/>
+      <driver queues='2' rx_queue_size='1024' tx_queue_size='1024'>
+	    <host mrg_rxbuf='off'/>
       </driver>
       <address type='pci' domain='0x0000' bus='0x04' slot='0x00' function='0x0'/>
     </interface>
@@ -100,8 +100,8 @@
       <mac address='52:54:00:38:fe:01'/>
       <source type='unix' path='/tmp/dpdkvhostuser1' mode='server'/>
       <model type='virtio'/>
-      <driver rx_queue_size='1024' tx_queue_size='1024'>
-        <host mrg_rxbuf='off'/>
+      <driver queues='2' rx_queue_size='1024' tx_queue_size='1024'>
+	    <host mrg_rxbuf='off'/>
       </driver>
       <address type='pci' domain='0x0000' bus='0x05' slot='0x00' function='0x0'/>
     </interface>
