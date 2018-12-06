@@ -50,7 +50,7 @@ end
 --   runFlowTest("whatever", 0, 0, 100, 64, 1, 1, 1, 10, 100000000)
 
 -- run from pktgen shell
---   Pktgen:/> load /home/bai/repo/save/pktgen/rang-flow.lua
+--   Pktgen:/> load /home/bai/repo/save/pktgen/range-flow.lua
 --   Pktgen:/> lua 'runFlowTest("single", 0, 0, 100, 64, 1, 1, 1, 10, 0)'
 --   Pktgen:/> lua 'runFlowTest("single", 0, 0, 100, 64, 1, 1, 1, 0, 100000000)'
 --   Pktgen:/> lua 'runFlowTest("multi", 0, 0, 100, 64, 2000, 128, 128, 10, 0)'
