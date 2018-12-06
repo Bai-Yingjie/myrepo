@@ -65,6 +65,7 @@ function runFlowTest(mark, sendport, recvport, rate, pkt_size, nb_L2, nb_L3, nb_
 	pktgen.clr();
 	pktgen.set(sendport, "rate", rate);
 	pktgen.set(sendport, "count", nb_pkts);
+	pktgen.latency("all", "enable");
 
 	setFlow(sendport, pkt_size, nb_L2, nb_L3, nb_L4);
 
@@ -97,11 +98,19 @@ function runFlowTest(mark, sendport, recvport, rate, pkt_size, nb_L2, nb_L3, nb_
 	local num_rx = statRx.ipackets;
 	local num_dropped = num_tx - num_rx;
 
+	local statPkt = pktgen.pktStats("all")[tonumber(recvport)];
+
 	file:write("Tx pps: " .. ppsTx .. "\n");
 	file:write("Rx pps: " .. ppsRx .. "\n");
 	file:write("Tx pkts: " .. num_tx .. "\n");
 	file:write("Rx pkts: " .. num_rx .. "\n");
 	file:write("Dropped pkts: " .. num_dropped .. "\n");
+	file:write("Min avg latency(usec): " .. statPkt.min_latency .. "\n");
+	file:write("Max avg latency(usec): " .. statPkt.max_latency .. "\n");
 
 	file:close();
+	pktgen.set("all", "rate", 100);
+	pktgen.set("all", "count", 0);
+	pktgen.set_range("all", "off");
+	pktgen.latency("all", "disable");
 end
