@@ -7,9 +7,14 @@ set updatetime=1000
 set ruler		" show the cursor position all the time
 set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%]
 set laststatus=2
-set ts=4
-set autoindent
+filetype plugin indent on
+" show existing tab with 4 spaces width
+set tabstop=4
+" when indenting with '>', use 4 spaces width
 set shiftwidth=4
+" On pressing tab, insert 4 spaces
+set expandtab
+set autoindent
 set nu
 set nobackup
 set noswapfile
