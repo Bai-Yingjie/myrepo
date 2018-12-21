@@ -51,6 +51,9 @@ end
 
 -- run from pktgen shell
 --   Pktgen:/> load /home/bai/repo/save/pktgen/range-flow.lua
+-- set dst mac if peer is VF
+--   Pktgen:/> range 0 dst mac start F6:D9:3E:DE:B5:68
+-- start test
 --   Pktgen:/> lua 'runFlowTest("single", 0, 0, 100, 64, 1, 1, 1, 10, 0)'
 --   Pktgen:/> lua 'runFlowTest("single", 0, 0, 100, 64, 1, 1, 1, 0, 100000000)'
 --   Pktgen:/> lua 'runFlowTest("multi", 0, 0, 100, 64, 2000, 128, 128, 10, 0)'
@@ -58,7 +61,11 @@ end
 function runFlowTest(mark, sendport, recvport, rate, pkt_size, nb_L2, nb_L3, nb_L4, duration, nb_pkts)  
 	sendport = tostring(sendport);
 	recvport = tostring(recvport);
-	local datafile = tostring(mark) .. "_" .. pkt_size .. "B_" .. nb_L2 .. "L2-" .. nb_L3 .. "L3-" .. nb_L4 .. "L4_flow.data"
+    -- avoid non-stoppable running, default to 60s
+    if(duration == 0 and nb_pkts == 0) then
+        duration = 60;
+    end
+	local datafile = tostring(mark) .. "_" .. rate .. "rate_" .. pkt_size .. "B_" .. nb_L2 .. "L2-" .. nb_L3 .. "L3-" .. nb_L4 .. "L4_flow.data"
 	local file = io.open(datafile, "w");
 
 	pktgen.stop("all");
@@ -86,9 +93,9 @@ function runFlowTest(mark, sendport, recvport, rate, pkt_size, nb_L2, nb_L3, nb_
 	until(i == duration or rateTx.pkts_tx == 0)
 
 	pktgen.stop(sendport);
-
 	pktgen.delay(1 * 1000);
 
+    local statPkt = pktgen.pktStats("all")[tonumber(recvport)];
 	local ppsTx = ppsTxTable[i//2];
 	local ppsRx = ppsRxTable[i//2];
 
@@ -98,15 +105,12 @@ function runFlowTest(mark, sendport, recvport, rate, pkt_size, nb_L2, nb_L3, nb_
 	local num_rx = statRx.ipackets;
 	local num_dropped = num_tx - num_rx;
 
-	local statPkt = pktgen.pktStats("all")[tonumber(recvport)];
-
 	file:write("Tx pps: " .. ppsTx .. "\n");
 	file:write("Rx pps: " .. ppsRx .. "\n");
 	file:write("Tx pkts: " .. num_tx .. "\n");
 	file:write("Rx pkts: " .. num_rx .. "\n");
 	file:write("Dropped pkts: " .. num_dropped .. "\n");
-	file:write("Min avg latency(usec): " .. statPkt.min_latency .. "\n");
-	file:write("Max avg latency(usec): " .. statPkt.max_latency .. "\n");
+	file:write("Avg latency(usec): " .. statPkt.avg_latency .. "\n");
 
 	file:close();
 	pktgen.set("all", "rate", 100);
