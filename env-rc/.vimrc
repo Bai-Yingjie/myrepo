@@ -69,3 +69,9 @@ noremap <F3> :Autoformat<CR><CR>
 
 "MRU
 let MRU_File=$PWD . '/.vim_mru_files'
+
+" Uncomment the following to have Vim jump to the last position when
+" reopening a file
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+endif
