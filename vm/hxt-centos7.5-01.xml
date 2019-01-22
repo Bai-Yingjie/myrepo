@@ -10,10 +10,10 @@
   </memoryBacking>
   <vcpu placement='static'>4</vcpu>
   <cputune>
-    <vcpupin vcpu='0' cpuset='8'/>
-    <vcpupin vcpu='1' cpuset='9'/>
-    <vcpupin vcpu='2' cpuset='10'/>
-    <vcpupin vcpu='3' cpuset='11'/>
+    <vcpupin vcpu='0' cpuset='26'/>
+    <vcpupin vcpu='1' cpuset='27'/>
+    <vcpupin vcpu='2' cpuset='28'/>
+    <vcpupin vcpu='3' cpuset='29'/>
   </cputune>
   <os>
     <type arch='aarch64' machine='virt-2.12'>hvm</type>
@@ -88,11 +88,11 @@
       <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
     </interface>
     <interface type='vhostuser'>
-      <mac address='52:54:00:38:fe:8c'/>
-      <source type='unix' path='/usr/local/var/run/openvswitch/dpdkvhostuser0' mode='client'/>
+      <mac address='52:54:00:38:fe:00'/>
+      <source type='unix' path='/tmp/dpdkvhostuser0' mode='server'/>
       <model type='virtio'/>
-      <driver queues='2'>
-        <host mrg_rxbuf='on'/>
+      <driver rx_queue_size='1024' tx_queue_size='1024'>
+        <host mrg_rxbuf='off'/>
       </driver>
       <address type='pci' domain='0x0000' bus='0x04' slot='0x00' function='0x0'/>
     </interface>
