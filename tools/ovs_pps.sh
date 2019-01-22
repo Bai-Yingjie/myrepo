@@ -9,7 +9,7 @@ if [ $? -ne 0 ]; then
 fi
 
 prep () { #string
-	echo "$1" | grep -Eo "port [0-9]*: [[:alnum:]]*|RX packets.*|TX packets.*" | tr "?" "0" \
+	echo "$1" | grep -Eo "port [0-9]*: \S*|RX packets.*|TX packets.*" | tr "?" "0" \
 		| awk -F'[ :]' '{if(NR%3==1) port=$4; else{for(i=2;i<=NF;i+=2){a[port,$1,$i]=$(i+1)}}} END {for(k in a) {split(k,se,SUBSEP);printf "%s %s %s:%s\n",se[1],se[2],se[3],a[k]}}'
 }
 
