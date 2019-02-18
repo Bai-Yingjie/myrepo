@@ -8,7 +8,7 @@ int main(void)
 	
 	int i;
 	int a[r];
-	for(i=0; i<=r; i++)
+	for(i=0; i<r; i++)
 	{
 		a[i]=i;
 		printf("a[%d]=%d\n", a[i], i);
