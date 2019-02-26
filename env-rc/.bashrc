@@ -32,12 +32,18 @@ alias fg3='fg %3'
 alias fg4='fg %4'
 alias fg5='fg %5'
 alias fg6='fg %6'
+alias fg7='fg %7'
+alias fg8='fg %8'
+alias fg9='fg %9'
 alias kj1='kill -9 %1'
 alias kj2='kill -9 %2'
 alias kj3='kill -9 %3'
 alias kj4='kill -9 %4'
 alias kj5='kill -9 %5'
 alias kj6='kill -9 %6'
+alias kj7='kill -9 %7'
+alias kj8='kill -9 %8'
+alias kj9='kill -9 %9'
 alias ls='ls --color=auto'
 alias ll='ls -l'
 alias la='ls -a'
@@ -65,6 +71,31 @@ alias vi=vim
 alias em='emacs -nw'
 alias sara='sar -Bwqr -dp -n DEV -u ALL 1'
 alias pspid='ps -Lo tid,pid,ppid,psr,stat,%cpu,rss,cmd --sort=-%cpu'
+
+bitmask() { #eg. 0,5,8-11 17,26-30 return 7c020f21
+    local bm=0
+    for arg in $(echo $* | tr ',' ' ');do
+        #[ expression ] && statement1 || statement2 is equal to if expression then statement1 else statement2
+        #for i in $([ $(echo "$arg" | cut -d'-' -f1) == $arg ] && echo $arg || echo $arg | tr '-' ' ' | xargs seq);do
+        #for i in $(seq ${arg%-*} ${arg#*-});do
+        for ((i=${arg%-*};i<=${arg#*-};i++));do 
+            ((bm |= 1<<$i))
+        done
+    done
+    printf "%x\n" $bm
+}
+
+bitunmask() { #input hex: 7c020f21 or 0x7c020f21
+    local x=$((16#${1#0x}))
+
+    for ((i=0; x; x = x>>1,i++));do
+        for ((h=l=i; x&1; x = x>>1,i++,h++));do :;done
+        ((h - l == 1)) && echo -n "$l " 
+        ((h - l > 1)) && echo -n "$l-$((h-1)) "
+    done
+    echo
+}
+
 
 mkcselffiles() {
 	${CROSS_COMPILE}gdb -ex="info sources" -ex="quit" $1 | sed -e '1,15d' -e 's/,/\n/g' | sed -e '/^ *$/d' -e 's/^ *//g' > cscope.files.tmp1
