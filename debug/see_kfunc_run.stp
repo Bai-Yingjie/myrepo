@@ -1,0 +1,65 @@
+#!/usr/bin/stap
+
+# Take up to 4 arguments as kernel functions for which stp shows their runtime status including visiable variables on the current probe point.
+# Each time the probed event occurs, log the kernel stack and print the same callstack records once when this script exits. 
+# User space stack traces are also logged and printed.
+# eg.
+# sudo stap ~/repo/save/debug/see_kfunc_run.stp irqfd_wakeup irqfd_inject
+
+global kstack, kstack_log
+global ustack, ustack_log
+
+probe begin {
+    println("========begining========\n")
+}
+
+@define do_probe %(
+    ln = sprintf("%16s %6d [%03d] %s %s => %s",execname(),tid(),cpu(),usecs_to_string(gettimeofday_us()),probefunc(),$$vars)
+    println(ln)
+
+    new_kstack = callers(-1)
+    if (kstack[tid()] != new_kstack) {
+        kstack[tid()] = new_kstack
+        kstack_log[ln] = new_kstack
+    } 
+
+    new_ustack = ucallers(-1)
+    if (ustack[tid()] != new_ustack) {
+        ustack[tid()] = new_ustack
+        ustack_log[ln] = new_ustack
+    } 
+%)
+
+%( $# == 1 %?
+probe kernel.function(@1) { @do_probe }
+%)
+
+%( $# == 2 %?
+probe kernel.{function(@1),function(@2)} { @do_probe }
+%)
+
+%( $# == 3 %?
+probe kernel.{function(@1),function(@2),function(@3)} { @do_probe }
+%)
+
+%( $# == 4 %?
+probe kernel.{function(@1),function(@2),function(@3),function(@4)} { @do_probe }
+%)
+
+probe end {
+    println("========ended========\n")
+
+    println("Kernel space callstack:\n")
+    foreach ([ln] in kstack_log) {
+        println(ln)
+        print_syms(kstack_log[ln])
+        println()
+    }
+
+    println("User space callstack:\n")
+    foreach ([ln] in ustack_log) {
+        println(ln)
+        print_usyms(ustack_log[ln])
+        println()
+    }
+}
