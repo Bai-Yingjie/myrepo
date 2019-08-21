@@ -1,0 +1,103 @@
+#!/usr/bin/stap
+
+# Take up to 4 arguments as kernel functions for which stp shows their runtime status including visiable variables on the current probe point.
+# Each time the probed event occurs, log the kernel stack and print the same callstack records once when this script exits. 
+# User space stack traces are also logged and printed.
+# Scheduler events are also printed.
+# eg.
+# to stap kernel function irqfd_wakeup and irqfd_inject, with call stacks and all scheduler events printed.
+# sudo stap ~/repo/save/debug/see_kfunc_run.stp irqfd_wakeup irqfd_inject
+# besides the previous, scheduler events are limited to pid 38726 "related" tasks, and log to file
+# sudo stap ~/repo/save/debug/see_kfunc_run.stp -d /usr/local/sbin/ovs-vswitchd irqfd_wakeup irqfd_inject -o stap.log -x 38726
+
+global kstack, kstack_log
+global ustack, ustack_log
+global watch_list
+
+probe begin {
+    println("========begining========\n")
+    #When stap starts with -x PID, here PID can be a tid, find the pid in the same process group
+    #target()=0 if -x PID unspecified
+    if (target() != 0) {
+        target_task = pid2task(target())
+        target_pid = task_pid(target_task)
+        watch_list[target_pid] = 1
+    }
+}
+
+function header(probe_name) {
+	ln = sprintf("%-16s %6d [%03d] %s %24s",execname(),tid(),cpu(),usecs_to_string(gettimeofday_us()),probe_name)
+	return ln
+}
+
+@define do_probe %(
+	ln = sprintf("%s :: %s", header(probefunc()), $$vars)
+    println(ln)
+
+    new_kstack = callers(-1)
+    if (kstack[tid()] != new_kstack) {
+        kstack[tid()] = new_kstack
+        kstack_log[ln] = new_kstack
+    } 
+
+    new_ustack = ucallers(-1)
+    if (ustack[tid()] != new_ustack) {
+        ustack[tid()] = new_ustack
+        ustack_log[ln] = new_ustack
+    } 
+%)
+
+%( $# == 1 %?
+probe kernel.function(@1) { @do_probe }
+%)
+
+%( $# == 2 %?
+probe kernel.{function(@1),function(@2)} { @do_probe }
+%)
+
+%( $# == 3 %?
+probe kernel.{function(@1),function(@2),function(@3)} { @do_probe }
+%)
+
+%( $# == 4 %?
+probe kernel.{function(@1),function(@2),function(@3),function(@4)} { @do_probe }
+%)
+
+probe scheduler.wakeup
+{
+    # from process A wakeup B, then A and B must have something related
+    # watch all related tasks, but not the idle task
+    if (target() == 0 || [pid()] in watch_list || [task_pid(task)] in watch_list) {
+        if (task_pid(task) != 0)
+            watch_list[task_pid(task)] = 1
+        if (pid() != 0)
+            watch_list[pid()] = 1
+
+        printf("%s >> %-16s%6d [%03d]\n", header(name), task_execname(task), task_tid, task_cpu)
+    }
+}
+
+probe scheduler.ctxswitch
+{
+    if (target() == 0 || [pid()] in watch_list || [task_pid(next_task)] in watch_list) {
+        printf("%s => %-16s%6d [%03d]\n", header(name), next_task_name, next_tid, task_cpu(next_task))
+    }
+}
+
+probe end {
+    println("========ended========\n")
+
+    println("Kernel space callstack:\n")
+    foreach ([ln] in kstack_log) {
+        println(ln)
+        print_syms(kstack_log[ln])
+        println()
+    }
+
+    println("User space callstack:\n")
+    foreach ([ln] in ustack_log) {
+        println(ln)
+        print_usyms(ustack_log[ln])
+        println()
+    }
+}
