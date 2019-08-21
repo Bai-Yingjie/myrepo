@@ -23,6 +23,7 @@ void json_load_dump_test(char *filename, int test_count)
         }
 
         json_dumpfd(json, 1, 0);
+        json_decref(json);
     }
 
     //printf("\n\n\n#### done, test count: %d\n", i);
