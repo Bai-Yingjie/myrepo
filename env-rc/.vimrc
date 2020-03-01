@@ -1,3 +1,4 @@
+noremap! <C-?> <C-h>
 "colorscheme desert
 colorscheme ron
 set clipboard=unnamedplus
@@ -13,7 +14,7 @@ set tabstop=4
 " when indenting with '>', use 4 spaces width
 set shiftwidth=4
 " On pressing tab, insert 4 spaces
-set expandtab
+"set expandtab
 set autoindent
 set nu
 set nobackup
@@ -64,6 +65,12 @@ endif
 " timeout in between both characters.
 inoremap zz <Esc>
 
+"don't overwrite last copy
+vnoremap p "0p
+vnoremap P "0P
+vnoremap y "0y
+vnoremap d "0d
+
 "auto format
 noremap <F3> :Autoformat<CR><CR>
 
@@ -75,3 +82,7 @@ let MRU_File=$PWD . '/.vim_mru_files'
 if has("autocmd")
   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
+
+"show space in end of line
+highlight WhitespaceEOL ctermbg=red guibg=red
+match WhitespaceEOL /\s\+$/

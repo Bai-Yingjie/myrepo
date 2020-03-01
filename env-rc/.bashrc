@@ -1,22 +1,20 @@
-PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[01;34m\] \w\n`cat /etc/issue.net` \$\[\033[00m\] '
+PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[01;34m\] \w\n\$\[\033[00m\] '
 #LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 #export LD_LIBRARY_PATH
+#export PATH=~/bin:~/usr/bin:~/sbin:$PATH:/ap/local/Linux_x86_64/bin/
+export HISTTIMEFORMAT="%F %T "
 
-case $TERM in
-	xterm*)
-		PROMPT_COMMAND='echo -ne "\033]0;$(hostname):$(basename $(pwd))\007"'
-		export HISTCONTROL=ignoredups:erasedups  # no duplicate entries
-		export HISTSIZE=100000                   # big big history
-		export HISTFILESIZE=100000               # big big history
-		shopt -s histappend                      # append to history, don't overwrite it
-		export PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
-		;;
-esac
-
+#PROMPT_COMMAND='echo -ne "\033]0;$(hostname):$(basename $(pwd))\007"'
+export HISTCONTROL=ignoredups:erasedups  # no duplicate entries
+export HISTSIZE=100000                   # big big history
+export HISTFILESIZE=100000               # big big history
+shopt -s histappend                      # append to history, don't overwrite it
+#export PROMPT_COMMAND="history -a;history -c;history -r;$PROMPT_COMMAND"
+export PROMPT_COMMAND="history -a"
 
 alias rm='rm -i'
 alias mv='mv -i'
-alias jr='cd ~/repo && ls'
+alias jr='cd /repo/yingjieb && ls'
 alias jt='cd ~/tmp && ls'
 alias a='cd .. && ls'
 alias aa='cd ../../ && ls'
@@ -71,6 +69,20 @@ alias vi=vim
 alias em='emacs -nw'
 alias sara='sar -Bwqr -dp -n DEV -u ALL 1'
 alias pspid='ps -Lo tid,pid,ppid,psr,stat,%cpu,rss,cmd --sort=-%cpu'
+
+#Show diff in a single changeset, like hg diff -c REV, but with local file in a 3 way fashion 
+#This is used to see how a changeset in another branch differs from the local file
+hgdiff3way() { #$1: REV
+	local rev=$1
+	local files=$(hg log -r $rev --template "{files}")
+	local tmpdir=$(mktemp -d /tmp/hgdiff3way.XXXXX)
+	for f in $files;do
+		mkdir -p $tmpdir/$(dirname $f)
+		hg cat $f -r $rev^ > $tmpdir/$f@parent
+		hg cat $f -r $rev > $tmpdir/$f@$rev
+		kdiff3 $tmpdir/$f@parent $tmpdir/$f@$rev $f &
+	done
+}
 
 bitmask() { #eg. 0,5,8-11 17,26-30 return 7c020f21
     local bm=0
@@ -155,11 +167,11 @@ mkgt(){
 }
 
 proxyon() {
-	export socks_proxy="socks://localhost:11985/"
-	export http_proxy=$socks_proxy
-	export https_proxy=$socks_proxy
-	export ftp_proxy=$socks_proxy
-	export rsync_proxy=$socks_proxy
+	#export socks_proxy="socks://localhost:11985/"
+	export http_proxy="http://135.245.48.34:8000"
+	export https_proxy="https://135.245.48.34:8000"
+	export ftp_proxy=$http_proxy
+	export rsync_proxy=$http_proxy
 	export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
 	echo -e "\nProxy environment variable set."
 }
@@ -171,5 +183,4 @@ proxyoff() {
 	unset ftp_proxy
 	unset rsync_proxy
 	echo -e "\nProxy environment variable removed."
-} 
-
+}
