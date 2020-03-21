@@ -13,11 +13,9 @@
 [merge]
 	tool = meld
 [alias]
-	ls = log --oneline --decorate
+	ls = log --date=short --pretty=format:'%C(auto,yellow)%h  %C(auto,blue)%ad  %C(auto,green)%<(15,trunc)%aN %C(auto,reset)%s%C(auto,red)% gD% D'
 	lg = log --decorate --stat --graph
 [push]
 	default = matching
-[http]
-	proxy = http://135.245.48.34:8000
 [color]
 	ui = auto
